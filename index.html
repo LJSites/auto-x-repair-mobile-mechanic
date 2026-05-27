@@ -1,0 +1,1262 @@
+<!-- ARCHETYPE: Rugged Industrial Garage
+     Key structural decisions:
+     - Full-bleed hero: left-aligned, photo strip at right side (not centered overlay). Bold condensed display headline split across two lines.
+     - Nav: sticky top bar, minimal — logo left, phone number CTA right, no hamburger menu on desktop.
+     - Services: horizontal scrolling card rail on mobile, 2-col asymmetric grid on desktop. No icons — category name as large reversed type, description beneath.
+     - About: split-panel — photo left, copy right with a bold pull-quote.
+     - Testimonies: vertical stacked ticker-tape style — full-width quote with name tab, no stars, no avatars.
+     - Location/Hours: two-column — map iframe left, hours table right.
+     - CTA: repeated as a full-width banner between Services and Testimonies.
+     - Animation: zero. Static only. Hover states use CSS transitions on color/border only.
+     - Color: #1a1a1a dark steel background, #222 panels, #f5a623 amber accent, #e8e8e8 near-white text.
+     - Type: Barlow Condensed (display/headlines) + Inter (body). Uppercase for all section labels and nav.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auto-X Repair — Mobile Mechanic | Burbank, CA</title>
+  <meta name="description" content="Auto-X Repair Mobile Mechanic in Burbank, CA. Edmond comes to you — oil changes, brake jobs, engine work, catalytic converter shields, and more. Call (818) 747-8290." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,900;1,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: #111;
+      color: #e0ddd6;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ===== DESIGN TOKENS ===== */
+    :root {
+      --black:   #0e0e0e;
+      --dark:    #151515;
+      --panel:   #1e1e1e;
+      --border:  #2e2e2e;
+      --amber:   #f5a623;
+      --amber-d: #d4891a;
+      --text:    #e0ddd6;
+      --muted:   #888;
+      --white:   #f5f3ef;
+    }
+
+    /* ===== UTILITY ===== */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin-inline: auto;
+      padding-inline: 24px;
+    }
+    .visually-hidden {
+      position: absolute;
+      width: 1px; height: 1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+    }
+    .label-tag {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--amber);
+      border-left: 3px solid var(--amber);
+      padding-left: 10px;
+      margin-bottom: 16px;
+    }
+
+    /* ===== NAV ===== */
+    #nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--black);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      gap: 16px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .nav-logo-mark {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      color: var(--white);
+      text-transform: uppercase;
+    }
+    .nav-logo-mark span {
+      color: var(--amber);
+    }
+    .nav-logo-sub {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-cta {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 15px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--amber);
+      padding: 8px 18px;
+      border: 2px solid var(--amber);
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .nav-cta:hover {
+      background: transparent;
+      color: var(--amber);
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-logo-sub { display: none; }
+    }
+
+    /* ===== HERO ===== */
+    #hero {
+      background: var(--dark);
+      overflow: hidden;
+      min-height: 88vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+    }
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 40px 80px 0;
+      padding-left: max(24px, calc((100vw - 1200px) / 2 + 24px));
+      position: relative;
+      z-index: 2;
+    }
+    .hero-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 36px;
+      height: 2px;
+      background: var(--amber);
+    }
+    .hero-h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: clamp(56px, 7vw, 96px);
+      line-height: 0.92;
+      text-transform: uppercase;
+      color: var(--white);
+      letter-spacing: -0.01em;
+      margin-bottom: 28px;
+    }
+    .hero-h1 em {
+      font-style: italic;
+      color: var(--amber);
+    }
+    .hero-sub {
+      font-size: 16px;
+      line-height: 1.65;
+      color: #9a9590;
+      max-width: 420px;
+      margin-bottom: 40px;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+    }
+    .btn-primary {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 17px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--amber);
+      padding: 14px 32px;
+      border: 2px solid var(--amber);
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--amber);
+    }
+    .btn-secondary {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .btn-secondary:hover {
+      color: var(--white);
+      border-color: var(--white);
+    }
+    .hero-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .hero-badge-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #3ecf4a;
+      box-shadow: 0 0 8px rgba(62, 207, 74, 0.5);
+      flex-shrink: 0;
+    }
+    .hero-badge-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .hero-photo-panel {
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-photo-panel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: brightness(0.75) saturate(0.7);
+    }
+    .hero-photo-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, var(--dark) 0%, transparent 30%);
+    }
+    .hero-photo-ticker {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--amber);
+      padding: 10px 24px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--black);
+      display: flex;
+      gap: 32px;
+      overflow: hidden;
+    }
+    .ticker-item::after {
+      content: '//';
+      margin-left: 32px;
+      opacity: 0.4;
+    }
+    @media (max-width: 768px) {
+      #hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+      .hero-content {
+        padding: 64px 24px 48px;
+      }
+      .hero-photo-panel {
+        height: 52vw;
+        min-height: 240px;
+        order: -1;
+      }
+      .hero-photo-overlay {
+        background: linear-gradient(to bottom, transparent 40%, var(--dark) 100%);
+      }
+    }
+
+    /* ===== SERVICES ===== */
+    #services {
+      background: var(--black);
+      padding: 96px 0;
+    }
+    .services-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 56px;
+      gap: 24px;
+    }
+    .services-h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: clamp(40px, 5vw, 64px);
+      line-height: 0.95;
+      text-transform: uppercase;
+      color: var(--white);
+      letter-spacing: -0.01em;
+    }
+    .services-note {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 260px;
+      text-align: right;
+      line-height: 1.5;
+      flex-shrink: 0;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2px;
+    }
+    .service-card {
+      background: var(--panel);
+      padding: 32px 28px;
+      border: 1px solid var(--border);
+      position: relative;
+      transition: border-color 0.15s;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--border);
+      transition: background 0.15s;
+    }
+    .service-card:hover { border-color: #3a3a3a; }
+    .service-card:hover::before { background: var(--amber); }
+    .service-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--amber);
+      margin-bottom: 16px;
+    }
+    .service-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 26px;
+      line-height: 1;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 12px;
+      letter-spacing: 0.01em;
+    }
+    .service-desc {
+      font-size: 14px;
+      color: #787470;
+      line-height: 1.6;
+    }
+    @media (max-width: 640px) {
+      .services-header { flex-direction: column; align-items: flex-start; }
+      .services-note { text-align: left; }
+    }
+
+    /* ===== CTA BANNER ===== */
+    .cta-banner {
+      background: var(--amber);
+      padding: 48px 0;
+    }
+    .cta-banner-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+    .cta-banner-copy {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: clamp(28px, 4vw, 48px);
+      line-height: 1;
+      text-transform: uppercase;
+      color: var(--black);
+      letter-spacing: -0.01em;
+    }
+    .cta-banner-copy span {
+      display: block;
+      font-size: 0.5em;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      opacity: 0.65;
+      margin-bottom: 6px;
+    }
+    .btn-dark {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 17px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--amber);
+      background: var(--black);
+      padding: 14px 32px;
+      border: 2px solid var(--black);
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-dark:hover {
+      background: transparent;
+      color: var(--black);
+    }
+    @media (max-width: 640px) {
+      .cta-banner-inner { flex-direction: column; align-items: flex-start; }
+    }
+
+    /* ===== ABOUT ===== */
+    #about {
+      background: var(--dark);
+      padding: 96px 0;
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+    .about-photo-stack {
+      position: relative;
+    }
+    .about-photo-main {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      filter: brightness(0.85) saturate(0.65);
+    }
+    .about-photo-accent {
+      position: absolute;
+      bottom: -28px;
+      right: -28px;
+      width: 52%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border: 4px solid var(--dark);
+      filter: brightness(0.8) saturate(0.65);
+    }
+    .about-content {
+      padding-top: 16px;
+    }
+    .about-h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: clamp(36px, 4.5vw, 60px);
+      line-height: 0.95;
+      text-transform: uppercase;
+      color: var(--white);
+      letter-spacing: -0.01em;
+      margin-bottom: 28px;
+    }
+    .about-h2 em {
+      font-style: italic;
+      color: var(--amber);
+    }
+    .about-body {
+      font-size: 15px;
+      color: #8a8580;
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+    .about-pull {
+      border-left: 4px solid var(--amber);
+      padding: 20px 24px;
+      background: #1a1a1a;
+      margin-bottom: 36px;
+    }
+    .about-pull p {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-style: italic;
+      font-size: 22px;
+      line-height: 1.3;
+      color: var(--white);
+      font-weight: 700;
+    }
+    .about-stats {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .about-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .stat-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 36px;
+      line-height: 1;
+      color: var(--amber);
+    }
+    .stat-label {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    @media (max-width: 768px) {
+      .about-grid { grid-template-columns: 1fr; gap: 48px; }
+      .about-photo-accent { right: 0; }
+    }
+
+    /* ===== TESTIMONIES ===== */
+    #testimonies {
+      background: var(--black);
+      padding: 96px 0;
+    }
+    .testimonies-header {
+      margin-bottom: 64px;
+    }
+    .testimonies-h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: clamp(40px, 5vw, 64px);
+      line-height: 0.95;
+      text-transform: uppercase;
+      color: var(--white);
+      letter-spacing: -0.01em;
+    }
+    .testimony-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .testimony-item {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 40px;
+      align-items: start;
+      transition: border-color 0.15s;
+    }
+    .testimony-item:last-child {
+      border-bottom: 1px solid var(--border);
+    }
+    .testimony-item:hover {
+      border-top-color: var(--amber);
+    }
+    .testimony-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 18px;
+      text-transform: uppercase;
+      color: var(--amber);
+      letter-spacing: 0.04em;
+      padding-top: 6px;
+    }
+    .testimony-quote {
+      font-size: 15px;
+      line-height: 1.75;
+      color: #8a8580;
+      position: relative;
+    }
+    .testimony-quote::before {
+      content: '\201C';
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 72px;
+      line-height: 0.7;
+      color: var(--amber);
+      opacity: 0.25;
+      position: absolute;
+      top: -4px;
+      left: -12px;
+      pointer-events: none;
+    }
+    .testimony-quote p {
+      padding-left: 0;
+    }
+    @media (max-width: 640px) {
+      .testimony-item {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+    }
+
+    /* ===== PHOTOS ===== */
+    #photos {
+      background: var(--dark);
+      padding-top: 64px;
+    }
+    .photo-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto;
+      gap: 3px;
+    }
+    .photo-strip-item {
+      overflow: hidden;
+      aspect-ratio: 4/3;
+    }
+    .photo-strip-item.tall {
+      grid-row: span 2;
+      aspect-ratio: auto;
+    }
+    .photo-strip-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.8) saturate(0.6);
+      transition: filter 0.2s;
+    }
+    .photo-strip-item:hover img {
+      filter: brightness(0.95) saturate(0.85);
+    }
+    @media (max-width: 640px) {
+      .photo-strip { grid-template-columns: repeat(2, 1fr); }
+      .photo-strip-item.tall { grid-row: span 1; aspect-ratio: 4/3; }
+    }
+
+    /* ===== LOCATION & HOURS ===== */
+    #location {
+      background: var(--dark);
+      padding: 96px 0;
+    }
+    .location-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+    .map-wrap {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .map-wrap iframe {
+      width: 100%;
+      height: 360px;
+      display: block;
+      border: none;
+      filter: invert(90%) hue-rotate(180deg) saturate(0.3) brightness(0.9);
+    }
+    .hours-block {
+      padding-top: 8px;
+    }
+    .hours-h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 36px;
+      text-transform: uppercase;
+      color: var(--white);
+      letter-spacing: -0.01em;
+      margin-bottom: 28px;
+    }
+    .hours-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .hours-table tr {
+      border-bottom: 1px solid var(--border);
+    }
+    .hours-table td {
+      padding: 10px 0;
+      font-size: 14px;
+    }
+    .hours-table td:first-child {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      width: 50%;
+    }
+    .hours-table td:last-child {
+      color: var(--text);
+      text-align: right;
+    }
+    .hours-table td:last-child.open {
+      color: #3ecf4a;
+    }
+    .address-block {
+      margin-top: 32px;
+      padding: 24px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+    }
+    .address-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 8px;
+    }
+    .address-text {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .address-phone {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 28px;
+      color: var(--white);
+      margin-top: 12px;
+      letter-spacing: -0.01em;
+      display: block;
+      transition: color 0.15s;
+    }
+    .address-phone:hover { color: var(--amber); }
+    @media (max-width: 768px) {
+      .location-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ===== FOOTER ===== */
+    #footer {
+      background: var(--black);
+      border-top: 1px solid var(--border);
+      padding: 56px 0 32px;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+    .footer-brand-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 28px;
+      text-transform: uppercase;
+      color: var(--white);
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+    }
+    .footer-brand-name span { color: var(--amber); }
+    .footer-tagline {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 280px;
+    }
+    .footer-col-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 20px;
+    }
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer-links a {
+      font-size: 14px;
+      color: var(--muted);
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: var(--white); }
+    .footer-social {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer-social-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--muted);
+      transition: color 0.15s;
+    }
+    .footer-social-link:hover { color: var(--amber); }
+    .social-platform {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-copy {
+      font-size: 12px;
+      color: #4a4a4a;
+    }
+    .footer-credit {
+      font-size: 12px;
+      color: #4a4a4a;
+    }
+    .footer-credit a {
+      color: var(--amber);
+      opacity: 0.7;
+      transition: opacity 0.15s;
+    }
+    .footer-credit a:hover { opacity: 1; }
+    @media (max-width: 768px) {
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .footer-top > :first-child { grid-column: 1 / -1; }
+    }
+    @media (max-width: 480px) {
+      .footer-top { grid-template-columns: 1fr; }
+    }
+
+    /* ===== SCROLL-TO-TOP ===== */
+    #scroll-top {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: var(--amber);
+      color: var(--black);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 18px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 50;
+    }
+    #scroll-top.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #scroll-top:hover {
+      background: var(--white);
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<header id="nav">
+  <div class="container">
+    <nav class="nav-inner" aria-label="Primary navigation">
+      <a href="#hero" class="nav-logo" aria-label="Auto-X Repair home">
+        <span class="nav-logo-mark">Auto<span>-X</span> Repair</span>
+        <span class="nav-logo-sub">Mobile Mechanic</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#testimonies">Testimonies</a></li>
+        <li><a href="#location">Location</a></li>
+      </ul>
+      <a href="tel:+18187478290" class="nav-cta">Call (818) 747-8290</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="hero" aria-label="Hero">
+  <div class="hero-content">
+    <p class="hero-eyebrow">Mobile Mechanic — Burbank, CA</p>
+    <h1 class="hero-h1">
+      We Come<br>
+      To <em>Your</em><br>
+      Car.
+    </h1>
+    <p class="hero-sub">
+      Auto-X Repair brings the shop to you — honest diagnostics, fair pricing, and expert repairs done right at your location in the greater Los Angeles area.
+    </p>
+    <div class="hero-actions">
+      <a href="tel:+18187478290" class="btn-primary">Call Now — (818) 747-8290</a>
+      <a href="#location" class="btn-secondary">Find Our Service Area</a>
+    </div>
+    <div class="hero-badge">
+      <div class="hero-badge-dot" aria-hidden="true"></div>
+      <span class="hero-badge-text">Open 7 Days &nbsp;·&nbsp; 9 AM – 9 PM Daily</span>
+    </div>
+  </div>
+  <div class="hero-photo-panel" aria-hidden="true">
+    <img
+      src="https://lh3.googleusercontent.com/places/ANXAkqHLHrz3PEHDwwwXjCbCNKrqDJPy0MFPfCPaRxPNHhbX5iW0Ri22OXcKmEPyyUL8c_ZimN7RM4ClsSJQcEuiprdKUn2BuAUrDJ8=s4800-w1600"
+      alt="Auto-X Repair mobile mechanic at work"
+      loading="eager"
+    />
+    <div class="hero-photo-overlay"></div>
+    <div class="hero-photo-ticker">
+      <span class="ticker-item">Engine Repair</span>
+      <span class="ticker-item">Brake Service</span>
+      <span class="ticker-item">Oil Change</span>
+      <span class="ticker-item">Diagnostics</span>
+      <span class="ticker-item">Catalytic Shield</span>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="services-header">
+      <div>
+        <p class="label-tag">What We Fix</p>
+        <h2 class="services-h2">Full-Service<br>Repair,<br>At Your Curb.</h2>
+      </div>
+      <p class="services-note">No towing needed. Edmond brings the tools — you stay home, at work, or wherever the car stops moving.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <p class="service-num">01</p>
+        <h3 class="service-name">Engine Repair</h3>
+        <p class="service-desc">From mounts to full diagnostics, engine issues diagnosed and repaired on-site — no shop drop-off required.</p>
+      </div>
+      <div class="service-card">
+        <p class="service-num">02</p>
+        <h3 class="service-name">Brake Service</h3>
+        <p class="service-desc">Brake pads, rotors, and calipers replaced wherever you are. Fast, safety-first turnaround.</p>
+      </div>
+      <div class="service-card">
+        <p class="service-num">03</p>
+        <h3 class="service-name">Oil &amp; Fluids</h3>
+        <p class="service-desc">Full oil changes, filter swaps, and fluid top-offs done right at your location.</p>
+      </div>
+      <div class="service-card">
+        <p class="service-num">04</p>
+        <h3 class="service-name">Electrical &amp; Lighting</h3>
+        <p class="service-desc">Headlight issues, flickering, and electrical gremlins tracked down and resolved — not guessed at.</p>
+      </div>
+      <div class="service-card">
+        <p class="service-num">05</p>
+        <h3 class="service-name">Catalytic Converter Shield</h3>
+        <p class="service-desc">Miller CAT Shield installations for Toyota and hybrid vehicles — stop theft before it happens.</p>
+      </div>
+      <div class="service-card">
+        <p class="service-num">06</p>
+        <h3 class="service-name">Dead &amp; Dormant Cars</h3>
+        <p class="service-desc">Car been sitting for years? Edmond specializes in bringing them back — electrical, mechanical, and all.</p>
+      </div>
+      <div class="service-card">
+        <p class="service-num">07</p>
+        <h3 class="service-name">Emergency Roadside</h3>
+        <p class="service-desc">Stranded and can't drive? Call and Edmond will come to you, often within the hour.</p>
+      </div>
+      <div class="service-card">
+        <p class="service-num">08</p>
+        <h3 class="service-name">General Maintenance</h3>
+        <p class="service-desc">Tune-ups, part replacements, door handles, and everything in between — ask what he can do.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER (first instance) -->
+<div class="cta-banner" aria-label="Call to action">
+  <div class="container">
+    <div class="cta-banner-inner">
+      <p class="cta-banner-copy">
+        <span>Don't tow it — call it in</span>
+        Ready when your car isn't.
+      </p>
+      <a href="tel:+18187478290" class="btn-dark">Call (818) 747-8290</a>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-photo-stack">
+        <img
+          class="about-photo-main"
+          src="https://lh3.googleusercontent.com/places/ANXAkqEcKR1dk6aZ-DfgjdN1aq4pMCDy5AL90KqBgb3i8tun59YaVrIfXhfja_KexDENpva36-tMf1emhHAqX3pMNK1juCVKkJyuj60=s4800-w1600"
+          alt="Edmond working on a vehicle"
+          loading="lazy"
+        />
+        <img
+          class="about-photo-accent"
+          src="https://lh3.googleusercontent.com/places/ANXAkqGPu4lTYEiRgkpchPP50L5eQQy1dPcJNA6znEZJ1ujZW2g-2BpxTI5tgwd7-tW7xrTqeHzzidRUYhEN1swNUf3S2JT74FaKsXA=s4800-w1600"
+          alt="Mobile mechanic tools and repair work"
+          loading="lazy"
+        />
+      </div>
+      <div class="about-content">
+        <p class="label-tag">About Edmond</p>
+        <h2 class="about-h2">
+          A Mechanic<br>
+          Who Works <em>For</em><br>
+          You.
+        </h2>
+        <div class="about-pull">
+          <p>"He will never take advantage of you and will never charge you more."</p>
+        </div>
+        <p class="about-body">
+          Edmond — the founder of Auto-X Repair — built this business on a simple idea: honest mechanics shouldn't be hard to find. He comes to your car wherever it is, shows you exactly what's wrong, and never upsells you on parts you don't need.
+        </p>
+        <p class="about-body">
+          Serving the greater Los Angeles and Burbank area, Edmond has built a reputation as a reliable neighbor mechanic — the kind you keep in your phone for life. From quick brake jobs to dead engines brought back from the brink, he handles it all on-site with patience and precision.
+        </p>
+        <div class="about-stats">
+          <div class="about-stat">
+            <span class="stat-num">7</span>
+            <span class="stat-label">Days a week</span>
+          </div>
+          <div class="about-stat">
+            <span class="stat-num">12hrs</span>
+            <span class="stat-label">Daily availability</span>
+          </div>
+          <div class="about-stat">
+            <span class="stat-num">&lt;1hr</span>
+            <span class="stat-label">Typical response</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHOTO STRIP -->
+<section id="photos" aria-label="Work photos">
+  <div class="photo-strip">
+    <div class="photo-strip-item tall">
+      <img
+        src="https://lh3.googleusercontent.com/places/ANXAkqHC66AScptfPLGQStDfHbvF6uLS2aeyTQ0TRtmbvZy-1DK8MZzkm36IcU9PlzY0zZ6E0M65RyAMt4h99koAJapK9C_xUXI2LJU=s4800-w1600"
+        alt="Auto-X Repair mobile mechanic service"
+        loading="lazy"
+      />
+    </div>
+    <div class="photo-strip-item">
+      <img
+        src="https://lh3.googleusercontent.com/places/ANXAkqGVy5cdCp8qfKTqwCkfUsQykA5AIvT0biL3WCg60rXrsWiGu-y0dChIBTHxD1BLwqErF0qPCTuD8ANNf1Wuv1mnImiLIGsGGvk=s4800-w1600"
+        alt="Car repair in progress"
+        loading="lazy"
+      />
+    </div>
+    <div class="photo-strip-item">
+      <img
+        src="https://lh3.googleusercontent.com/places/ANXAkqE-uQW5lpb3t8oO8Jo4O1huPdk7ya5g7uDvudQUbe90Aa_MEppG76b-YO2fqL9jgpMFnQFRRM8S9Of759yvRT2FSMbosEw4=s4800-w1600"
+        alt="Mechanic tools and auto parts"
+        loading="lazy"
+      />
+    </div>
+    <div class="photo-strip-item">
+      <img
+        src="https://source.unsplash.com/800x600/?car+engine+repair"
+        alt="Engine repair detail"
+        loading="lazy"
+      />
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIES -->
+<section id="testimonies">
+  <div class="container">
+    <div class="testimonies-header">
+      <p class="label-tag">In Their Words</p>
+      <h2 class="testimonies-h2">What People Say</h2>
+    </div>
+    <div class="testimony-list">
+      <article class="testimony-item">
+        <p class="testimony-name">Kristy E.</p>
+        <div class="testimony-quote">
+          <p>Edmon is the best mechanic I've met around the Los Angeles area PERIOD. I was 3 hours away from home and called him at 11:30 AM with car troubles — not safe to drive. He came within the hour and worked until 9 PM. He knew I had to drive alone as a woman and I was scared to break down. He kept working until it was drivable. He is one of the hidden gems in a sea of dishonesty in Los Angeles. My car is running better than it has in months — maybe years. Worth every penny.</p>
+        </div>
+      </article>
+      <article class="testimony-item">
+        <p class="testimony-name">Rayan T.</p>
+        <div class="testimony-quote">
+          <p>I had an old Honda Civic sitting on the street for years — dusty, dirty, wouldn't start. I honestly thought the car was done for. Edmond showed up when he said he would and got straight to work. He didn't try to sell me things I didn't need — told me what was important and what could wait. A car that I thought was dead is now running again. This is the kind of mechanic you want to keep in your phone forever.</p>
+        </div>
+      </article>
+      <article class="testimony-item">
+        <p class="testimony-name">Ashot J.</p>
+        <div class="testimony-quote">
+          <p>Edmona is a very responsible and professional auto mechanic. She works cleanly, quickly, and most importantly, honestly. She explained my car's issue in detail, suggested the best solution, and completed everything with high quality. The prices are fair, and the service is excellent. I will definitely return and highly recommend her to everyone.</p>
+        </div>
+      </article>
+      <article class="testimony-item">
+        <p class="testimony-name">Kevin S.</p>
+        <div class="testimony-quote">
+          <p>Edmon is the most humble and genuine mechanic in Burbank. Very reliable, patient and honest. He installed the Miller CAT Shield on my new Toyota Corolla Hybrid in just an hour. All the reviews I've read are true — he will never take advantage of you and will never charge you more. Came back for door handles and brake pads too. Best price anywhere.</p>
+        </div>
+      </article>
+      <article class="testimony-item">
+        <p class="testimony-name">Lou A.</p>
+        <div class="testimony-quote">
+          <p>Had an emergency. Called him and he came over to where I was in less than an hour to rescue. He checked my car and changed the brakes in under an hour. He's simple, polite, and straightforward — did not overcharge me. Truly amazing experience.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER (second instance) -->
+<div class="cta-banner" aria-label="Call to action">
+  <div class="container">
+    <div class="cta-banner-inner">
+      <p class="cta-banner-copy">
+        <span>Open 7 days — 9 AM to 9 PM</span>
+        Same-day service, no appointment needed.
+      </p>
+      <a href="tel:+18187478290" class="btn-dark">Call Now</a>
+    </div>
+  </div>
+</div>
+
+<!-- LOCATION & HOURS -->
+<section id="location">
+  <div class="container">
+    <p class="label-tag">Find Us</p>
+    <div class="location-grid">
+      <div class="map-wrap">
+        <iframe
+          src="https://www.google.com/maps?q=600+E+Olive+Ave%2C+Burbank%2C+CA+91501%2C+USA&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Auto-X Repair location map"
+        ></iframe>
+      </div>
+      <div class="hours-block">
+        <h2 class="hours-h3">Hours &amp;<br>Contact</h2>
+        <table class="hours-table" aria-label="Business hours">
+          <tbody>
+            <tr><td>Monday</td><td class="open">9:00 AM – 9:00 PM</td></tr>
+            <tr><td>Tuesday</td><td class="open">9:00 AM – 9:00 PM</td></tr>
+            <tr><td>Wednesday</td><td class="open">9:00 AM – 9:00 PM</td></tr>
+            <tr><td>Thursday</td><td class="open">9:00 AM – 9:00 PM</td></tr>
+            <tr><td>Friday</td><td class="open">9:00 AM – 9:00 PM</td></tr>
+            <tr><td>Saturday</td><td class="open">9:00 AM – 9:00 PM</td></tr>
+            <tr><td>Sunday</td><td class="open">9:00 AM – 9:00 PM</td></tr>
+          </tbody>
+        </table>
+        <div class="address-block">
+          <p class="address-label">Address &amp; Phone</p>
+          <p class="address-text">600 E Olive Ave, Burbank, CA 91501</p>
+          <a href="tel:+18187478290" class="address-phone">(818) 747-8290</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <p class="footer-brand-name">Auto<span>-X</span> Repair</p>
+        <p class="footer-tagline">Mobile mechanic serving Burbank and greater Los Angeles. Honest work, fair prices, and we come to you — open 7 days, 9 AM to 9 PM.</p>
+      </div>
+      <div>
+        <p class="footer-col-title">Quick Links</p>
+        <ul class="footer-links">
+          <li><a href="#services">Services</a></li>
+          <li><a href="#about">About Edmond</a></li>
+          <li><a href="#testimonies">Testimonies</a></li>
+          <li><a href="#location">Hours &amp; Location</a></li>
+          <li><a href="tel:+18187478290">Call Now</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">Find Us Online</p>
+        <div class="footer-social">
+          <a
+            href="https://maps.google.com/?cid=4863850993117625084&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA"
+            class="footer-social-link"
+            target="_blank"
+            rel="noopener"
+            aria-label="Google Business listing"
+          >
+            <span class="social-platform">Google</span>
+            Business Profile
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">&copy; 2025 Auto-X Repair Mobile Mechanic. Burbank, CA.</p>
+      <p class="footer-credit">
+        Mockup designed by LJ Sites &mdash; interested in making this yours?
+        <a href="mailto:jcpeng2002@gmail.com">jcpeng2002@gmail.com</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- SCROLL TO TOP -->
+<button id="scroll-top" aria-label="Scroll to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script>
+  // Scroll-to-top visibility
+  const scrollBtn = document.getElementById('scroll-top');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 600) {
+      scrollBtn.classList.add('visible');
+    } else {
+      scrollBtn.classList.remove('visible');
+    }
+  }, { passive: true });
+</script>
+
+</body>
+</html>
